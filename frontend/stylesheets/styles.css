@@ -1,0 +1,29 @@
+nav {
+    margin-top: 25px;
+    margin-bottom: 30px;
+}
+a {
+    font-weight: bold;
+    color: #2c3e50;
+}
+.org-description {
+    margin-top: 50px;
+}
+.boxed {
+    border: 1px solid green;
+}
+.course {
+    border: solid lightblue;
+    /* width: 150px; */
+    display: inline-block;
+    margin: 10px;
+    padding: 10px;
+}
+.container > div {
+    display: inline-block;
+    display: -moz-inline-box;
+    *display: inline; /* For IE7 */
+    zoom: 1; /* Trigger hasLayout */
+    width: 33%;
+    text-align: center;
+}
