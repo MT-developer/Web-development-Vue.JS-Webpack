@@ -4,24 +4,99 @@
     <meta charset="UTF-8">
     <title>CW2 - WPA - M00629206</title>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-    <script src="scripts/app.js"></script>
-    <script src="scripts/classes.js"></script>
-    <script src="scripts/accounts.js"></script>
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css">
-    <link lang="scss" scoped rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css">
-    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="./stylesheets/styles.css">
 
 </head>
 
 <body>
-        <div id="#accounts">
+
+<script type="text/x-template" id="modal-template">
+    <transition name="modal">
+        <div class="modal-mask">
+            <div class="modal-wrapper">
+                <div class="modal-container">
+
+                    <div class="modal-header">
+                        <slot name="header">
+
+                        </slot>
+                    </div>
+
+                    <div class="modal-body">
+                        <slot name="body">
+                            <div id="login">
+                                <h1>Login</h1>
+                                <label>
+                                    <input type="text" class="form-control" name="email" v-model="username"
+                                           placeholder="email"/>
+                                </label>
+                                <label>
+                                    <input type="password" class="form-control" name="password" v-model="password"
+                                           placeholder="Password"/>
+                                </label>
+                                <button type="button" class="btn btn-success"
+                                        v-on:click="loginNormal(username,password)">Login as
+                                    parent/student
+                                </button>
+                                <button type="button" class="btn btn-success"
+                                        v-on:click="loginAdmin(username,password)">Login as
+                                    provider
+                                </button>
+                            </div>
+
+
+                        </slot>
+                    </div>
+
+                    <div id="register-form login-form-main-message login-group">
+                        <h1>Register</h1>
+                        <form>
+                            <label>
+                                <input type="text" class="form-control" name="username" v-model="regUsername"
+                                       placeholder="Username"/>
+                            </label>
+                            <input type="email" class="form-control" name="email" v-model="regEmail"
+                                   placeholder="Email"/>
+                            <label>
+                                <input type="password" class="form-control" name="password" v-model="regPassword"
+                                       placeholder="Password"/>
+                            </label>
+                            <button type="button" class="btn btn-success"
+                                    v-on:click="regNormal(regUsername,regEmail,regPassword)">Register as a
+                                parent/student
+                            </button>
+                            <button type="button" class="btn btn-success"
+                                    v-on:click="regAdmin(regUsername,regEmail,regPassword)">Register as a provider
+                            </button>
+                        </form>
+                    </div>
+
+                    <div class="modal-footer">
+                        <slot name="footer">
+                            <button class="modal-default-button" @click="$emit('close')">
+                                Close
+                            </button>
+                        </slot>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </transition>
+</script>
+
+<div id="app">
+    <div v-if="get_login_state() == 'false'">
+
+
+        <div>
             <nav class="navbar container" role="navigation" aria-label="main navigation">
                 <div class="navbar-brand">
                     <a class="navbar-item">
                         <strong class="is-size-4 text-center">School activities</strong>
                     </a>
-                    <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+                    <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false"
+                       data-target="navbarBasicExample">
                         <span aria-hidden="true"></span>
                         <span aria-hidden="true"></span>
                         <span aria-hidden="true"></span>
@@ -29,75 +104,66 @@
                 </div>
                 <div id="navbar" class="navbar-menu">
                     <div class="navbar-end">
-                        <div class="navbar-item" vv-show="isLoggedIn()">
-                            <div class="buttons">
-                                <button type="button" v-on:click="logout()">Logout</button>
-                            </div>
+                        <button class="btn btn-success" id="show-modal" @click="showModal = true">Login/register
+                        </button>
+                        <modal v-if="showModal" @close="showModal = false">
+                            <h3 slot="header"> Login/Register here!</h3>
+                        </modal>
+                        <div>
                         </div>
-                    </div>
-                    <div>
                     </div>
                 </div>
             </nav>
-
-            <div class="card text-center a">
-                <div class="card-body center">
-                    <div id="login">
-                        <h1>Login</h1>
-                        <input type="text" class="form-control" name="email" v-model="username" placeholder="email" />
-                        <input type="password" class="form-control" name="password" v-model="password" placeholder="Password" />
-                        <button type="button" class="btn btn-success" v-on:click="loginNormal(username,password)">Login as parent/student</button>
-                        <button type="button" class="btn btn-success" v-on:click="loginAdmin(username,password)">Login as provider</button>
-                    </div>
-
-                    <div id="register-form login-form-main-message login-group">
-                        <h1>Register</h1>
-                        <form>
-                            <input type="text" class="form-control" name="username" v-model="regUsername" placeholder="Username" />
-                            <input type="email" class="form-control" name="email" v-model="regEmail" placeholder="Email" />
-                            <input type="password" class="form-control" name="password" v-model="regPassword" placeholder="Password" />
-                            <button type="button" class="btn btn-success" v-on:click="regNormal(regUsername,regEmail,regPassword)">Register as a parent/student</button>
-                            <button type="button" class="btn btn-success" v-on:click="regAdmin(regUsername,regEmail,regPassword)">Register as a provider</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-
         </div>
+    </div>
 
-    <div id="#app">
 
+    <div>
         <div>
-            <div vv-show="isLoggedIn()" id="searchBar" style="margin-top: 30px">
-                <div class="display-3 text-center my-5 text-secondary">Activities! </div>
+            <div style="margin-top: 30px">
                 <div class="container w-75">
                     <div class="row mb-3">
                         <div class="col-md-4">
                             <div style="margin-left: 300px " class="dropdown">
                                 <p style="margin-right: 10px">Price</p>
-                                <select name="" style="margin-right: 40px; width: auto " class="form-control dropdown-header" v-model.trim="input.price">
-                                    <option value="All" selected>All</option>
-                                    <option :value="item" v-for="item in menuArrayPrice">{{item}}</option>
-                                </select>
+                                <label>
+                                    <select name="" style="margin-right: 40px; width: auto "
+                                            class="form-control dropdown-header" v-model.trim="input.price">
+                                        <option value="All" selected>All</option>
+                                        <option :value="item" v-for="item in menuArrayPrice">{{item}}</option>
+                                    </select>
+                                </label>
                                 <p style="margin-right: 10px">Topic</p>
-                                <select name="" style="margin-right: 40px; width: auto " class="form-control dropdown-header" v-model.trim="input.topics">
-                                    <option value="All" selected>All</option>
-                                    <option :value="item" v-for="item in menuArrayTopic">{{item}}</option>
-                                </select>
+                                <label>
+                                    <select name="" style="margin-right: 40px; width: auto "
+                                            class="form-control dropdown-header" v-model.trim="input.topics">
+                                        <option value="All" selected>All</option>
+                                        <option :value="item" v-for="item in menuArrayTopic">{{item}}</option>
+                                    </select>
+                                </label>
                                 <p style="margin-right: 10px">Review</p>
-                                <select name="" style="margin-right: 40px; width: auto " class="form-control dropdown-header" v-model.trim="input.reviews">
-                                    <option value="All" selected>All</option>
-                                    <option :value="item" v-for="item in menuArrayReview">{{item}}</option>
-                                </select>
+                                <label>
+                                    <select name="" style="margin-right: 40px; width: auto "
+                                            class="form-control dropdown-header" v-model.trim="input.reviews">
+                                        <option value="All" selected>All</option>
+                                        <option :value="item" v-for="item in menuArrayReview">{{item}}</option>
+                                    </select>
+                                </label>
                                 <p style="margin-right: 10px">Sort by</p>
-                                <select name="" style="margin-right: 40px; width: auto " style="" class="form-control dropdown-header" v-model.trim="input.sort">
-                                    <option selected></option>
-                                    <option :value="item" v-for="item in sortArray">{{item}}</option>
-                                </select>
+                                <label>
+                                    <select name="" style="margin-right: 40px; width: auto " style=""
+                                            class="form-control dropdown-header" v-model.trim="input.sort">
+                                        <option selected></option>
+                                        <option :value="item" v-for="item in sortArray">{{item}}</option>
+                                    </select>
+                                </label>
 
                             </div>
                             <div class="col-md-8">
-                                <input type="text" name="" style="width: 250px; margin-left: 500px" class="form-control" v-model.trim="input.topic" placeholder="search topics">
+                                <label>
+                                    <input type="text" name="" style="width: 250px; margin-left: 500px" class="form-control"
+                                           v-model.trim="input.topic" placeholder="search topics">
+                                </label>
                             </div>
                         </div>
                     </div>
@@ -118,15 +184,16 @@
                     </div>
                 </div>
             </div>
-
+        </div>
     </div>
+</div>
 
 
+<footer>
 
+</footer>
+<script src="scripts/main.js"></script>
 
-    <footer>
-
-    </footer>
 </body>
 
 </html>
