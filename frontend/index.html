@@ -10,39 +10,114 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css">
     <link lang="scss" scoped rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="stylesheets/styles.css">
 
 </head>
 
 <body>
-    <div id="#accounts">
-        <nav class="navbar container" role="navigation" aria-label="main navigation">
-            <div class="navbar-brand">
-                <a class="navbar-item">
-                    <strong class="is-size-4 text-center">School activities</strong>
-                </a>
-                <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
-                    <span aria-hidden="true"></span>
-                    <span aria-hidden="true"></span>
-                    <span aria-hidden="true"></span>
-                </a>
-            </div>
-            <div id="navbar" class="navbar-menu">
-                <div class="navbar-end">
-                    <div class="navbar-item" vv-show="isLoggedIn()">
-                        <div class="buttons">
-                            <button type="button" v-on:click="logout()">Logout</button>
+        <div id="#accounts">
+            <nav class="navbar container" role="navigation" aria-label="main navigation">
+                <div class="navbar-brand">
+                    <a class="navbar-item">
+                        <strong class="is-size-4 text-center">School activities</strong>
+                    </a>
+                    <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+                        <span aria-hidden="true"></span>
+                        <span aria-hidden="true"></span>
+                        <span aria-hidden="true"></span>
+                    </a>
+                </div>
+                <div id="navbar" class="navbar-menu">
+                    <div class="navbar-end">
+                        <div class="navbar-item" vv-show="isLoggedIn()">
+                            <div class="buttons">
+                                <button type="button" v-on:click="logout()">Logout</button>
+                            </div>
                         </div>
                     </div>
+                    <div>
+                    </div>
                 </div>
-                <div>
+            </nav>
+
+            <div class="card text-center a">
+                <div class="card-body center">
+                    <div id="login">
+                        <h1>Login</h1>
+                        <input type="text" class="form-control" name="email" v-model="username" placeholder="email" />
+                        <input type="password" class="form-control" name="password" v-model="password" placeholder="Password" />
+                        <button type="button" class="btn btn-success" v-on:click="loginNormal(username,password)">Login as parent/student</button>
+                        <button type="button" class="btn btn-success" v-on:click="loginAdmin(username,password)">Login as provider</button>
+                    </div>
+
+                    <div id="register-form login-form-main-message login-group">
+                        <h1>Register</h1>
+                        <form>
+                            <input type="text" class="form-control" name="username" v-model="regUsername" placeholder="Username" />
+                            <input type="email" class="form-control" name="email" v-model="regEmail" placeholder="Email" />
+                            <input type="password" class="form-control" name="password" v-model="regPassword" placeholder="Password" />
+                            <button type="button" class="btn btn-success" v-on:click="regNormal(regUsername,regEmail,regPassword)">Register as a parent/student</button>
+                            <button type="button" class="btn btn-success" v-on:click="regAdmin(regUsername,regEmail,regPassword)">Register as a provider</button>
+                        </form>
+                    </div>
                 </div>
             </div>
-        </nav>
-    </div>
+
+        </div>
 
     <div id="#app">
 
+        <div>
+            <div vv-show="isLoggedIn()" id="searchBar" style="margin-top: 30px">
+                <div class="display-3 text-center my-5 text-secondary">Activities! </div>
+                <div class="container w-75">
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <div style="margin-left: 300px " class="dropdown">
+                                <p style="margin-right: 10px">Price</p>
+                                <select name="" style="margin-right: 40px; width: auto " class="form-control dropdown-header" v-model.trim="input.price">
+                                    <option value="All" selected>All</option>
+                                    <option :value="item" v-for="item in menuArrayPrice">{{item}}</option>
+                                </select>
+                                <p style="margin-right: 10px">Topic</p>
+                                <select name="" style="margin-right: 40px; width: auto " class="form-control dropdown-header" v-model.trim="input.topics">
+                                    <option value="All" selected>All</option>
+                                    <option :value="item" v-for="item in menuArrayTopic">{{item}}</option>
+                                </select>
+                                <p style="margin-right: 10px">Review</p>
+                                <select name="" style="margin-right: 40px; width: auto " class="form-control dropdown-header" v-model.trim="input.reviews">
+                                    <option value="All" selected>All</option>
+                                    <option :value="item" v-for="item in menuArrayReview">{{item}}</option>
+                                </select>
+                                <p style="margin-right: 10px">Sort by</p>
+                                <select name="" style="margin-right: 40px; width: auto " style="" class="form-control dropdown-header" v-model.trim="input.sort">
+                                    <option selected></option>
+                                    <option :value="item" v-for="item in sortArray">{{item}}</option>
+                                </select>
+
+                            </div>
+                            <div class="col-md-8">
+                                <input type="text" name="" style="width: 250px; margin-left: 500px" class="form-control" v-model.trim="input.topic" placeholder="search topics">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid-container w-75 mb-5">
+                        <div class="row">
+                            <div class="col-md-2" v-for="item in filterAry">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{item.topic}}</h5>
+                                        <p class="card-text">Location: {{item.location}}</p>
+                                        <p class="card-text">Price: {{item.price}}</p>
+                                        <p class="card-text">Rating: {{item.reviewStars}} / 5</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
     </div>
 
