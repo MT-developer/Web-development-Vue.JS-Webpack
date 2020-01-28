@@ -105,9 +105,29 @@ var main = new Vue({
         showModal: false
     },
     methods: {
-        get_login_state : function () {
+        get_login_state: function () {
             console.log('get');
-            return localStorage.getItem( 'loginState' );
+            return localStorage.getItem('loginState');
+        },
+        login: function () {
+            const email = document.getElementById("login_email")
+            const password = document.getElementById("login_password")
+            const type = document.getElementById("login_type")
+
+            fetch("", {
+                method: 'post',
+                headers: {
+                    "Content-type": "application/x-www-form-urlencoded; charset=UTF-8"
+                },
+                body: 'foo=bar&lorem=ipsum'
+            })
+                .then(json)
+                .then(function (data) {
+                    console.log('Request succeeded with JSON response', data);
+                })
+                .catch(function (error) {
+                    console.log('Request failed', error);
+                });
         }
     },
     computed: {
