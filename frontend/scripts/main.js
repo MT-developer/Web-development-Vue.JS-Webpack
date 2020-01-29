@@ -1,8 +1,3 @@
-Vue.component('modal', {
-    template: '#modal-template'
-})
-
-
 let classes = {
     menu: [{
         topic: 'math',
@@ -89,49 +84,79 @@ let classes = {
     newAry: [],
     otherAry: [],
     filterText: null,
-    sortArray: ["Price(High to Low)", "Price(Low to High)", "Topic (Descending)", "Topic (Ascending)", "Review(High to Low)", "Review(Low to High)"]
+    sortArray: ["Price(High to Low)", "Price(Low to High)", "Topic (Descending)", "Topic (Ascending)", "Review(High to Low)", "Review(Low to High)"],
+    loginStates: false,
+    regState: false
 };
 
-
-var main = new Vue({
+var vueapp = new Vue({
     el: '#app',
-    data: {
-        loginButtonText: "Login/Register",
-        username: "",
-        password: "",
-        regUsername: "",
-        regEmail: "",
-        regPassword: "",
-        showModal: false
+    data:
+        classes,
+
+    mounted: function () {
+        newAry = classes;
+
     },
     methods: {
-        get_login_state: function () {
-            console.log('get');
-            return localStorage.getItem('loginState');
+        regButton: function() {
+                this.regState = true;
         },
-        login: function () {
-            const email = document.getElementById("login_email")
-            const password = document.getElementById("login_password")
-            const type = document.getElementById("login_type")
-
-            fetch("", {
-                method: 'post',
+        register: async function (regEmail, regPassword, regType) {
+            const data = {
+                email: regEmail,
+                password: regPassword,
+                type: regType
+            };
+            const options = {
+                method: 'POST',
                 headers: {
-                    "Content-type": "application/x-www-form-urlencoded; charset=UTF-8"
+                    'Content-Type': 'application/json'
                 },
-                body: 'foo=bar&lorem=ipsum'
-            })
-                .then(json)
-                .then(function (data) {
-                    console.log('Request succeeded with JSON response', data);
-                })
-                .catch(function (error) {
-                    console.log('Request failed', error);
-                });
-        }
+                body: JSON.stringify(data)
+            };
+            const regRes = await fetch('http://localhost:4000/user/register', options);
+            const regResData = await regRes.json()
+            console.log(regResData)
+            if(regResData.status === 'success' ) {
+                this.regState = false;
+            }
+        },
+
+        login: async function (loginEmail, loginPassword, loginType) {
+
+            const data = {
+                email: loginEmail,
+                password: loginPassword,
+                type: loginType
+            };
+            const options = {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            };
+
+            const response = await fetch('http://localhost:4000/user/login', options);
+            const resData = await response.json();
+            if (resData.status === 'success') {
+                localStorage.setItem("userEmail", resData.email);
+                localStorage.setItem("userType", resData.type);
+                this.loginStates = true;
+                localStorage.setItem("loginState", this.loginStates);
+            }
+            console.log(resData);
+        },
+
+        logout: async function () {
+            this.loginStates = false;
+            await localStorage.setItem("loginState", this.loginStates);
+            localStorage.setItem("userEmail", "");
+            localStorage.setItem("userType", "");
+        },
     },
     computed: {
-
         menuArrayReview() {
             let vm = this
             let array = new Set()
@@ -247,16 +272,6 @@ var main = new Vue({
             })
 
         },
-        isLoggedIn() {
-            if (localStorage.getItem("loggedUser") === "true") {
-                return true;
-            } else {
-                return false
-            }
-        },
-        mounted: function () {
-            newAry = classes;
-        }
-    }
-})
 
+    }
+});

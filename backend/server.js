@@ -13,12 +13,14 @@ app.use(bodyParser.json())
 app.use(cors());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
+app.use(express.json({limit: '1mb'}))
 
 let db;
 MongoClient.connect('mongodb://localhost:27017/', (err, client) => {
     db = client.db('cw2')
     classes = db.collection("classes");
     users = db.collection("users");
+
 
 })
 
@@ -49,98 +51,93 @@ app.get('/classes', (req, res) => {
 
 // get classes by provider
 app.get('/classes/provider/:id', (req, res, next) => {
-    classes.find({"provider":req.params.id}).toArray(function(err, results){
-      res.send(results)
+    classes.find({"provider": req.params.id}).toArray(function (err, results) {
+        res.send(results)
     });
 })
 
 // delete classes
 app.delete('/classes/delete/:id', (req, res, next) => {
     var id = req.params.id;
-    classes.deleteOne({ _id: new mongo.ObjectId(id) }, function (err, results) {
+    classes.deleteOne({_id: new mongo.ObjectId(id)}, function (err, results) {
     });
-    res.json({ success: id })
+    res.json({success: id})
 });
 
 
 //update class
 app.post('/classes/update/:id', (req, res, next) => {
-    var newvalues = { topic: req.body.topic, price: req.body.price, location: req.body.location};
-    classes.updateOne({_id : req.body.id}, newvalues, function(err, res) {
+    var newvalues = {topic: req.body.topic, price: req.body.price, location: req.body.location};
+    classes.updateOne({_id: req.body.id}, newvalues, function (err, res) {
         console.log("1 document updated");
     });
     res.json(req.body.price)
 })
 
 
-
-app.post("/user/login", (req, res) => {
-    users.findOne({
-        email: req.body.email
-    })
-        .then(user => {
-            if (user) {
-                if (req.body.password === user.password) {
-                    const payload = {
-                        _id: user._id,
-                        email: user.email,
-                        password: user.password,
-                        type: user.type
-                    }
-                } else {
-                    res.json({ error: "User does not exist" });
-                }
-            } else {
-                res.json({ error: "User does not exist" });
-            }
-        })
-        .catch(err => {
-            res.send("error: " + err);
-        });
-});
-
-
-// Defined store route
-app.route("/user/register").post(function(req, res) {
-    // eslint-disable-next-line no-console
-    console.log("Register button clicked");
-    const today = new Date();
-    const userData = {
-        first_name: req.body.first_name,
-        last_name: req.body.last_name,
+// register function
+app.post("/user/register", (req, res) => {
+    const data = {
         email: req.body.email,
         password: req.body.password,
-        created: today
+        type: req.body.type
     };
-    // eslint-disable-next-line no-console
-    console.log("New user started");
-
-    User.findOne({
-        email: req.body.email
+    users.findOne({
+        email: req.body.email,
+        type: req.body.type
     })
         .then(user => {
             if (!user) {
-                User.create(userData)
+                users.insertOne(data)
                     .then(user => {
-                        // eslint-disable-next-line no-console
-                        console.log("New user registered");
-                        res.json({ status: user.email + " registered" });
+                        console.log("Account created");
+                        res.json({status: req.body.email + ": created account"});
                     })
                     .catch(err => {
-                        // eslint-disable-next-line no-console
-                        console.log("Error registering")
-                        res.send("error: " + err);
+                        console.log(err)
+                        res.send("Error: " + err);
                     });
             } else {
-                // eslint-disable-next-line no-console
                 console.log("User already exists")
-                res.json({ error: "User already exists" });
+                res.json({error: "User already exists"});
             }
         })
         .catch(err => {
-            // eslint-disable-next-line no-console
-            console.log("Error")
+            console.log("Error" + err)
             res.send("error: " + err);
         });
 });
 
+
+app.post("/user/login", (req, res) => {
+    console.log('user logging in')
+    users.findOne({
+        email: req.body.email,
+        type: req.body.type,    })
+        .then(user => {
+            console.log(user)
+            if (user) {
+                if (req.body.password === user.password) {
+                    res.json({
+                        status: 'success',
+                        email: req.body.email,
+                        type: req.body.type
+                    })
+
+                    console.log("Login success")
+
+                } else {
+                    console.log("User doesn't exist")
+                    res.json({error: "User doesn't exist"});
+                }
+            } else {
+                console.log("User dssssoesn't exist")
+
+                res.json({error: "User doesssn't exist"});
+            }
+        })
+        .catch(err => {
+            console.log(err)
+            res.send("error: " + err);
+        });
+});
