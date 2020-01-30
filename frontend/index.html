@@ -44,7 +44,8 @@
                 <div id="login" style="padding-left: 25%; padding-right: 25%" v-show="!regState">
                     <h1 style="font-size: 25px">Login</h1>
                     <input type="text" class="form-control" name="email" v-model="loginUsername" placeholder="Email"/>
-                    <input type="password" class="form-control" name="password" style="margin-top: 10px; margin-bottom: 10px" v-model="loginPassword"
+                    <input type="password" class="form-control" name="password"
+                           style="margin-top: 10px; margin-bottom: 10px" v-model="loginPassword"
                            placeholder="Password"/>
 
                     <select v-model="loginSelected  ">
@@ -84,64 +85,89 @@
                 </div>
             </div>
         </div>
-
     </div>
-    <div>
-        <div v-show="loginStates" id="searchBar" style="margin-top: 30px">
-            <div class="container w-75">
-                <div class="row mb-3">
-                    <div class="col-md-4">
-                        <div style="margin-left: 300px " class="dropdown">
-                            <p style="margin-right: 10px">Price</p>
-                            <select name="" style="margin-right: 40px; width: auto "
-                                    class="form-control dropdown-header" v-model.trim="input.price">
-                                <option value="All" selected>All</option>
-                                <option :value="item" v-for="item in menuArrayPrice">{{item}}</option>
-                            </select>
-                            <p style="margin-right: 10px">Topic</p>
-                            <select name="" style="margin-right: 40px; width: auto "
-                                    class="form-control dropdown-header" v-model.trim="input.topics">
-                                <option value="All" selected>All</option>
-                                <option :value="item" v-for="item in menuArrayTopic">{{item}}</option>
-                            </select>
-                            <p style="margin-right: 10px">Review</p>
-                            <select name="" style="margin-right: 40px; width: auto "
-                                    class="form-control dropdown-header" v-model.trim="input.reviews">
-                                <option value="All" selected>All</option>
-                                <option :value="item" v-for="item in menuArrayReview">{{item}}</option>
-                            </select>
-                            <p style="margin-right: 10px">Sort by</p>
-                            <select name="" style="margin-right: 40px; width: auto " style=""
-                                    class="form-control dropdown-header" v-model.trim="input.sort">
-                                <option selected></option>
-                                <option :value="item" v-for="item in sortArray">{{item}}</option>
-                            </select>
+    <!--    <div>-->
+    <!--        <div  id="searchBar" style="margin-top: 30px">-->
+    <!--            <div class="container w-75">-->
+    <!--                <div class="row mb-3">-->
+    <!--                    <div class="col-md-4">-->
+    <!--                        <div style="margin-left: 300px " class="dropdown">-->
+    <!--                            <p style="margin-right: 10px">Price</p>-->
+    <!--                            <select name="" style="margin-right: 40px; width: auto "-->
+    <!--                                    class="form-control dropdown-header" v-model.trim="input.price">-->
+    <!--                                <option value="All" selected>All</option>-->
+    <!--                                <option :value="item" v-for="item in menuArrayPrice">{{item}}</option>-->
+    <!--                            </select>-->
+    <!--                            <p style="margin-right: 10px">Topic</p>-->
+    <!--                            <select name="" style="margin-right: 40px; width: auto "-->
+    <!--                                    class="form-control dropdown-header" v-model.trim="input.topics">-->
+    <!--                                <option value="All" selected>All</option>-->
+    <!--                                <option :value="item" v-for="item in menuArrayTopic">{{item}}</option>-->
+    <!--                            </select>-->
+    <!--                            <p style="margin-right: 10px">Review</p>-->
+    <!--                            <select name="" style="margin-right: 40px; width: auto "-->
+    <!--                                    class="form-control dropdown-header" v-model.trim="input.reviews">-->
+    <!--                                <option value="All" selected>All</option>-->
+    <!--                                <option :value="item" v-for="item in menuArrayReview">{{item}}</option>-->
+    <!--                            </select>-->
+    <!--                            <p style="margin-right: 10px">Sort by</p>-->
+    <!--                            <select name="" style="margin-right: 40px; width: auto " style=""-->
+    <!--                                    class="form-control dropdown-header" v-model.trim="input.sort">-->
+    <!--                                <option selected></option>-->
+    <!--                                <option :value="item" v-for="item in sortArray">{{item}}</option>-->
+    <!--                            </select>-->
 
-                        </div>
-                        <div class="col-md-8">
-                            <input type="text" name="" style="width: 250px; margin-left: 500px" class="form-control"
-                                   v-model.trim="input.topic" placeholder="search topics">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="grid-container w-75 mb-5">
-                    <div class="row">
-                        <div class="col-md-2" v-for="item in filterAry">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">{{item.topic}}</h5>
-                                    <p class="card-text">Location: {{item.location}}</p>
-                                    <p class="card-text">Price: {{item.price}}</p>
-                                    <p class="card-text">Rating: {{item.reviewStars}} / 5</p>
-                                </div>
-                            </div>
+    <!--                        </div>-->
+    <!--                        <div class="col-md-8">-->
+    <!--                            <input type="text" name="" style="width: 250px; margin-left: 500px" class="form-control"-->
+    <!--                                   v-model.trim="input.topic" placeholder="search topics">-->
+    <!--                        </div>-->
+    <!--                    </div>-->
+    <!--                </div>-->
+    <div v-show="loginStates">
+        <div class="grid-container w-75 mb-5">
+            <div class="row">
+                <div class="col-md-2" v-for="item in filterAry">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">{{item.topic}}</h5>
+                            <p class="card-text">Location: {{item.location}}</p>
+                            <p class="card-text">Price: {{item.price}}</p>
+                            <p class="card-text">Rating: {{item.reviewStars}} / 5</p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
+
+        <div>
+            <form>
+                <div class="form-group">
+                    <label for="addClassTopic">Topic</label>
+                    <input type="text" class="form-control" id="addClassTopic"
+                           placeholder="name@example.com">
+                </div>
+                <div class="form-group">
+                    <label for="addClassPrice">Price</label>
+                    <input type="text" class="form-control" id="addClassPrice"
+                           placeholder="name@example.com">
+                </div>
+                <div class="form-group">
+                    <label for="addClassLocation">Email address</label>
+                    <input type="text" class="form-control" id="addClassLocation"
+                           placeholder="name@example.com">
+                </div>
+
+                <div>
+                    <button type="buttonAddClass" class=" form-control btn btn-success"
+                            v-on:click="register(regEmail,regPassword,regSelected)">Add class
+                    </button>
+                </div>
+
+            </form>
+        </div>
     </div>
 </div>
-
+]
 </body>

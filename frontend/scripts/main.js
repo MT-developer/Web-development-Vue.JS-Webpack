@@ -1,5 +1,6 @@
 let classes = {
-    menu: [{
+    menu: [
+        {
         topic: 'math',
         location: 'colindale',
         price: 80,
@@ -94,11 +95,48 @@ var vueapp = new Vue({
     data:
         classes,
 
-    mounted: function () {
+    mounted: async function() {
+        const options = {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }
+        const data = await fetch('http://localhost:4000/classes', options);
+        const dataRes = await data.json();
+        console.log(dataRes);
+        classes.menu = dataRes;
         newAry = classes;
+
 
     },
     methods: {
+        getClassesByProvider: async function(providerName) {
+            const options = {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }
+            const data = await fetch('http://localhost:4000/classes/provider/' + providerName, options);
+            const dataRes = await data.json();
+            console.log(dataRes);
+            menu = dataRes;
+        },
+
+        getClasses: async function() {
+            const options = {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }
+            const data = await fetch('http://localhost:4000/classes', options);
+            const dataRes = await data.json();
+            console.log(dataRes);
+            menu = dataRes;
+        },
+
         regButton: function() {
                 this.regState = true;
         },
@@ -144,6 +182,7 @@ var vueapp = new Vue({
                 localStorage.setItem("userEmail", resData.email);
                 localStorage.setItem("userType", resData.type);
                 this.loginStates = true;
+                
                 localStorage.setItem("loginState", this.loginStates);
             }
             console.log(resData);

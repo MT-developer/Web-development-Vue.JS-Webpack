@@ -113,7 +113,7 @@ app.post("/user/login", (req, res) => {
     console.log('user logging in')
     users.findOne({
         email: req.body.email,
-        type: req.body.type,    })
+        type: req.body.type })
         .then(user => {
             console.log(user)
             if (user) {
