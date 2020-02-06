@@ -425,13 +425,10 @@ button.addEventListener('click', function(e) {
     });
 });
 function randomNotification() {
-    var randomItem = Math.floor(Math.random()*games.length);
-    var notifTitle = games[randomItem].name;
-    var notifBody = 'Created by '+games[randomItem].author+'.';
-    var notifImg = 'data/img/'+games[randomItem].slug+'.jpg';
+    var notifTitle = 'test'
+    var notifBody = 'nice';
     var options = {
         body: notifBody,
-        icon: notifImg
     }
     var notif = new Notification(notifTitle, options);
     setTimeout(randomNotification, 30000);
