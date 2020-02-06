@@ -93,7 +93,13 @@ app.get('/classes/provider/:id', (req, res, next) => {
 
 //update class
 app.post('/classes/update/', (req, res, next) => {
-    var newvalues = {topic: req.body.topic, price: req.body.price, location: req.body.location, provider: req.body.provider, author: req.body.author};
+    var newvalues = {
+        topic: req.body.topic,
+        price: req.body.price,
+        location: req.body.location,
+        provider: req.body.provider,
+        author: req.body.author
+    };
     classes.updateOne({_id: req.body.id}, newvalues, function (err, res) {
         console.log("1 document updated");
     });
@@ -112,14 +118,13 @@ app.post('/classes/addReview/:id', (req, res, next) => {
 
     var testData = {
         'body': 'teeesssstttttttt',
-        'rating' : 'teeesssstttttttt',
-        'author' : 'teeesssstttttttt'
+        'rating': 'teeesssstttttttt',
+        'author': 'teeesssstttttttt'
     }
     var data
 
     classes.find({"_id": new mongo.ObjectId(req.params.id)}).toArray(function (err, results) {
         console.log(results[3])
-
 
 
         classes.updateOne({_id: new mongo.ObjectId(req.params.id)}, results, function (err, res) {
@@ -131,7 +136,13 @@ app.post('/classes/addReview/:id', (req, res, next) => {
 // update review
 app.post('/classes/review/:id', (req, res, next) => {
 
-    var newvalues = {topic: req.body.topic, price: req.body.price, location: req.body.location, provider: req.body.provider, author: req.body.author};
+    var newvalues = {
+        topic: req.body.topic,
+        price: req.body.price,
+        location: req.body.location,
+        provider: req.body.provider,
+        author: req.body.author
+    };
     classes.updateOne({_id: req.body.id}, newvalues, function (err, res) {
         console.log("1 document updated");
     });
@@ -156,7 +167,8 @@ app.post("/user/register", (req, res) => {
                         console.log("Account created");
                         res.json({
                             status: 'success',
-                            email: req.body.email});
+                            email: req.body.email
+                        });
                     })
                     .catch(err => {
                         console.log(err)
@@ -178,7 +190,8 @@ app.post("/user/login", (req, res) => {
     console.log('user logging in')
     users.findOne({
         email: req.body.email,
-        type: req.body.type })
+        type: req.body.type
+    })
         .then(user => {
             console.log(user)
             if (user) {
@@ -188,9 +201,7 @@ app.post("/user/login", (req, res) => {
                         email: req.body.email,
                         type: req.body.type
                     })
-
                     console.log("Login success")
-
                 } else {
                     console.log("User doesn't exist")
                     res.json({error: "User doesn't exist"});

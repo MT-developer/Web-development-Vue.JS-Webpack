@@ -1,13 +1,13 @@
 let classes = {
     menu: [
         {
-        topic: 'math',
-        location: 'colindale',
-        price: 80,
-        length: "120",
-        time: "9:00",
-        reviewStars: "3"
-    },
+            topic: 'math',
+            location: 'colindale',
+            price: 80,
+            length: "120",
+            time: "9:00",
+            reviewStars: "3"
+        },
         {
             topic: 'math',
             location: 'brent cross',
@@ -88,19 +88,20 @@ let classes = {
     sortArray: ["Price(High to Low)", "Price(Low to High)", "Topic (Descending)", "Topic (Ascending)", "Review(High to Low)", "Review(Low to High)"],
     loginStates: false,
     regState: false,
+    admin: false,
     loggedUser: '',
     clickedClassTopic: '',
     clickedClassLocation: '',
-    clickedClassPrice:'',
+    clickedClassPrice: '',
     clickedClassProvider: ''
 };
 
 var vueapp = new Vue({
     el: '#app',
     data:
-        classes,
+    classes,
 
-    mounted: async function() {
+    mounted: async function () {
         const options = {
             method: 'GET',
             headers: {
@@ -116,19 +117,17 @@ var vueapp = new Vue({
 
     },
     methods: {
-        saveClickedClass: async function() {
+        saveClickedClass: async function () {
             const options = {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
                 }
             }
-            var data = {
-
-            }
+            var data = {}
         },
 
-        getClassByID: async function(classID){
+        getClassByID: async function (classID) {
             const options = {
                 method: 'GET',
                 headers: {
@@ -140,7 +139,7 @@ var vueapp = new Vue({
             console.log(dataRes.review);
         },
 
-        getClassesByProvider: async function(providerName) {
+        getClassesByProvider: async function (providerName) {
             const options = {
                 method: 'GET',
                 headers: {
@@ -153,7 +152,7 @@ var vueapp = new Vue({
             menu = dataRes;
         },
 
-        getReviewByUser: async function(providerName) {
+        getReviewByUser: async function (providerName) {
             const options = {
                 method: 'GET',
                 headers: {
@@ -166,7 +165,7 @@ var vueapp = new Vue({
             menu = dataRes;
         },
 
-        getClasses: async function() {
+        getClasses: async function () {
             const options = {
                 method: 'GET',
                 headers: {
@@ -179,8 +178,8 @@ var vueapp = new Vue({
             menu = dataRes;
         },
 
-        regButton: function() {
-                regState = true;
+        regButton: function () {
+            regState = true;
         },
 
         register: async function (regEmail, regPassword, regType) {
@@ -199,7 +198,7 @@ var vueapp = new Vue({
             const regRes = await fetch('http://localhost:4000/user/register', options);
             const regResData = await regRes.json()
             console.log(regResData)
-            if(regResData.status === 'success' ) {
+            if (regResData.status === 'success') {
                 this.regState = false;
             }
         },
@@ -226,13 +225,15 @@ var vueapp = new Vue({
                 localStorage.setItem("userType", resData.type);
                 this.loginStates = true;
                 this.loggedUser = resData.email
-                
                 localStorage.setItem("loginState", this.loginStates);
+                if(resData.type === 'Provider') {
+                    this.admin = true
+                }
             }
             console.log(resData);
         },
 
-        createClass: async function(addTopic, addPrice, addLocation, addProvider, addAuthor) {
+        createClass: async function (addTopic, addPrice, addLocation, addProvider, addAuthor) {
             const data = {
                 topic: addTopic,
                 price: addPrice,
@@ -252,7 +253,7 @@ var vueapp = new Vue({
 
         },
 
-        modifyClass: async function(modId, modTopic, modPrice, modLocation, modProvider, modAuthor) {
+        modifyClass: async function (modId, modTopic, modPrice, modLocation, modProvider, modAuthor) {
             const data = {
                 id: modId,
                 topic: modTopic,
@@ -278,6 +279,17 @@ var vueapp = new Vue({
             await localStorage.setItem("loginState", this.loginStates);
             localStorage.setItem("userEmail", "");
             localStorage.setItem("userType", "");
+
+            localStorage.clear()
+
+            this.loginStates = false;
+            this.regState = false;
+            this.admin = false;
+            this.loggedUser = '';
+            this.clickedClassTopic = '';
+            this.clickedClassLocation = '';
+            this.clickedClassPrice = '';
+            this.clickedClassProvider = '';
         },
     },
     computed: {
