@@ -414,10 +414,10 @@ var vueapp = new Vue({
 
 
 if('serviceWorker' in navigator) {
-    navigator.serviceWorker.register()
+    navigator.serviceWorker.register('/scripts/sw.js')
 }
 
-var button = document.getElementById("notifications");
+var button = document.getElementById("testButton");
 button.addEventListener('click', function(e) {
     Notification.requestPermission().then(function(result) {
         if(result === 'granted') {
