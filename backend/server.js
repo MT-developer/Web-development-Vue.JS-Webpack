@@ -56,24 +56,87 @@ app.get('/classes/provider/:id', (req, res, next) => {
     });
 })
 
+// get class by id
+app.get('/classes/:id', (req, res) => {
+    var objectid = mongo.ObjectID(req.params.id);
+    classes.find({"_id": objectid}).toArray(function (err, results) {
+        res.send(results)
+    })
+})
+
+// add class
+app.post('/classes/add', (req, res) => {
+    const data = {
+        topic: req.body.topic,
+        price: req.body.price,
+        location: req.body.location,
+        provider: req.body.provider,
+        author: req.body.author
+    };
+    classes.insertOne(data)
+    res.json({status: 'success'})
+})
 // delete classes
-app.delete('/classes/delete/:id', (req, res, next) => {
+app.delete('/classes/delete/', (req, res, next) => {
     var id = req.params.id;
     classes.deleteOne({_id: new mongo.ObjectId(id)}, function (err, results) {
     });
     res.json({success: id})
 });
 
+// get reviews by author
+app.get('/classes/provider/:id', (req, res, next) => {
+    classes.find({"author": req.params.id}).toArray(function (err, results) {
+        res.send(results)
+    });
+})
 
 //update class
-app.post('/classes/update/:id', (req, res, next) => {
-    var newvalues = {topic: req.body.topic, price: req.body.price, location: req.body.location};
+app.post('/classes/update/', (req, res, next) => {
+    var newvalues = {topic: req.body.topic, price: req.body.price, location: req.body.location, provider: req.body.provider, author: req.body.author};
     classes.updateOne({_id: req.body.id}, newvalues, function (err, res) {
         console.log("1 document updated");
     });
     res.json(req.body.price)
 })
 
+
+// add review
+app.post('/classes/addReview/:id', (req, res, next) => {
+    var vals = {
+        body: req.body.body,
+        rating: req.body.rating,
+        author: req.body.author
+    }
+
+
+    var testData = {
+        'body': 'teeesssstttttttt',
+        'rating' : 'teeesssstttttttt',
+        'author' : 'teeesssstttttttt'
+    }
+    var data
+
+    classes.find({"_id": new mongo.ObjectId(req.params.id)}).toArray(function (err, results) {
+        console.log(results[3])
+
+
+
+        classes.updateOne({_id: new mongo.ObjectId(req.params.id)}, results, function (err, res) {
+            console.log("1 document updated");
+        });
+    });
+})
+
+// update review
+app.post('/classes/review/:id', (req, res, next) => {
+
+    var newvalues = {topic: req.body.topic, price: req.body.price, location: req.body.location, provider: req.body.provider, author: req.body.author};
+    classes.updateOne({_id: req.body.id}, newvalues, function (err, res) {
+        console.log("1 document updated");
+    });
+    res.json(req.body.price)
+})
 
 // register function
 app.post("/user/register", (req, res) => {
@@ -91,7 +154,9 @@ app.post("/user/register", (req, res) => {
                 users.insertOne(data)
                     .then(user => {
                         console.log("Account created");
-                        res.json({status: req.body.email + ": created account"});
+                        res.json({
+                            status: 'success',
+                            email: req.body.email});
                     })
                     .catch(err => {
                         console.log(err)

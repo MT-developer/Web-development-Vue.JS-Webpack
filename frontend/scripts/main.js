@@ -87,7 +87,12 @@ let classes = {
     filterText: null,
     sortArray: ["Price(High to Low)", "Price(Low to High)", "Topic (Descending)", "Topic (Ascending)", "Review(High to Low)", "Review(Low to High)"],
     loginStates: false,
-    regState: false
+    regState: false,
+    loggedUser: '',
+    clickedClassTopic: '',
+    clickedClassLocation: '',
+    clickedClassPrice:'',
+    clickedClassProvider: ''
 };
 
 var vueapp = new Vue({
@@ -111,6 +116,30 @@ var vueapp = new Vue({
 
     },
     methods: {
+        saveClickedClass: async function() {
+            const options = {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }
+            var data = {
+
+            }
+        },
+
+        getClassByID: async function(classID){
+            const options = {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }
+            const data = await fetch('http://localhost:4000/classes/' + classID, options);
+            const dataRes = await data.json();
+            console.log(dataRes.review);
+        },
+
         getClassesByProvider: async function(providerName) {
             const options = {
                 method: 'GET',
@@ -119,6 +148,19 @@ var vueapp = new Vue({
                 }
             }
             const data = await fetch('http://localhost:4000/classes/provider/' + providerName, options);
+            const dataRes = await data.json();
+            console.log(dataRes);
+            menu = dataRes;
+        },
+
+        getReviewByUser: async function(providerName) {
+            const options = {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }
+            const data = await fetch('http://localhost:4000/classes/reviews/' + providerName, options);
             const dataRes = await data.json();
             console.log(dataRes);
             menu = dataRes;
@@ -138,8 +180,9 @@ var vueapp = new Vue({
         },
 
         regButton: function() {
-                this.regState = true;
+                regState = true;
         },
+
         register: async function (regEmail, regPassword, regType) {
             const data = {
                 email: regEmail,
@@ -182,10 +225,52 @@ var vueapp = new Vue({
                 localStorage.setItem("userEmail", resData.email);
                 localStorage.setItem("userType", resData.type);
                 this.loginStates = true;
+                this.loggedUser = resData.email
                 
                 localStorage.setItem("loginState", this.loginStates);
             }
             console.log(resData);
+        },
+
+        createClass: async function(addTopic, addPrice, addLocation, addProvider, addAuthor) {
+            const data = {
+                topic: addTopic,
+                price: addPrice,
+                location: addLocation,
+                provider: addProvider,
+                author: addAuthor
+            };
+            const options = {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            };
+            const response = await fetch('http://localhost:4000/classes/add', options)
+            const resData = await response.json();
+
+        },
+
+        modifyClass: async function(modId, modTopic, modPrice, modLocation, modProvider, modAuthor) {
+            const data = {
+                id: modId,
+                topic: modTopic,
+                price: modPrice,
+                location: modLocation,
+                provider: modProvider,
+                author: modAuthor
+            };
+            const options = {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            };
+            const response = await fetch('http://localhost:4000/classes/update', options);
+            const resData = await response.json();
+
         },
 
         logout: async function () {

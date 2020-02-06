@@ -85,7 +85,7 @@
                 </div>
             </div>
         </div>
-    </div>
+
     <!--    <div>-->
     <!--        <div  id="searchBar" style="margin-top: 30px">-->
     <!--            <div class="container w-75">-->
@@ -146,28 +146,61 @@
                 <div class="form-group">
                     <label for="addClassTopic">Topic</label>
                     <input type="text" class="form-control" id="addClassTopic"
-                           placeholder="name@example.com">
+                           placeholder="Name of topic" v-model="addTopic">
                 </div>
                 <div class="form-group">
                     <label for="addClassPrice">Price</label>
                     <input type="text" class="form-control" id="addClassPrice"
-                           placeholder="name@example.com">
+                           placeholder="name@example.com" v-model="addPrice">
                 </div>
                 <div class="form-group">
-                    <label for="addClassLocation">Email address</label>
+                    <label for="addClassLocation">Location</label>
                     <input type="text" class="form-control" id="addClassLocation"
-                           placeholder="name@example.com">
+                           placeholder="name@example.com" v-model="addLocation">
                 </div>
-
+                <div class="form-group">
+                    <label for="addClassLocation">Provider</label>
+                    <input type="text" class="form-control" id="addClassProvider"
+                           placeholder="name@example.com" v-model="addProvider">
+                </div>
                 <div>
-                    <button type="buttonAddClass" class=" form-control btn btn-success"
-                            v-on:click="register(regEmail,regPassword,regSelected)">Add class
+                    <button type="button" class=" form-control btn btn-success"
+                            v-on:click="createClass(addTopic, addPrice, addLocation, addProvider, loggedUser)">Add class
                     </button>
                 </div>
 
             </form>
         </div>
+
+
+        <div>
+            <form>
+                <div class="form-group">
+                    <label for="modTopic">Topic</label>
+                    <input type="text" class="form-con  trol" id="modTopic"
+                           placeholder="Name of topic" v-model="modTopic">
+                </div>
+                <div class="form-group">
+                    <label for="modPrice">Price</label>
+                    <input type="text" class="form-control" id="modPrice"
+                           placeholder="name@example.com" v-model="modPrice">
+                </div>
+                <div class="form-group">
+                    <label for="modLocation">Location</label>
+                    <input type="text" class="form-control" id="modLocation"
+                           placeholder="name@example.com" v-model="modLocation">
+                </div>
+                <div class="form-group">
+                    <label for="modProvider">Provider</label>
+                    <input type="text" class="form-control" id="modProvider"
+                           placeholder="name@example.com" v-model="modProvider">
+                </div>
+                <div>
+                    <button type="button" class=" form-control btn btn-success"
+                            v-on:click="createClass(addTopic, addPrice, addLocation, addProvider, loggedUser)">Add class
+                    </button>
+                </div>
+        </div>
     </div>
-</div>
-]
+
 </body>
