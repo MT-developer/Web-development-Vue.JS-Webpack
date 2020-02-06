@@ -412,10 +412,9 @@ var vueapp = new Vue({
     }
 });
 
-
 if('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/scripts/sw.js')
-}
+    navigator.serviceWorker.register('scripts/sw.js');
+};
 
 var button = document.getElementById("testButton");
 button.addEventListener('click', function(e) {
@@ -425,7 +424,6 @@ button.addEventListener('click', function(e) {
         }
     });
 });
-
 function randomNotification() {
     var randomItem = Math.floor(Math.random()*games.length);
     var notifTitle = games[randomItem].name;
@@ -438,4 +436,3 @@ function randomNotification() {
     var notif = new Notification(notifTitle, options);
     setTimeout(randomNotification, 30000);
 }
-
