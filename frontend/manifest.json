@@ -1,0 +1,14 @@
+{
+  "name": "Michal Tutak PWA CW2",
+  "short_name": "M00629206 - CW2",
+  "description": "CW2 - m00629206",
+  "icons": [
+    {
+      "src": "images/mdx.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "index.html",
+  "display": "fullscreen"
+}

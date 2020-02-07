@@ -1,3 +1,17 @@
+
+Notification.requestPermission(function(status) {
+    console.log('Notification permission status:', status);
+    displayNotification()
+});
+
+function displayNotification() {
+    if (Notification.permission === 'granted') {
+        navigator.serviceWorker.getRegistration().then(function(reg) {
+            reg.showNotification('Hello world!');
+        });
+    }
+}
+
 let classes = {
     menu: [
         {
@@ -181,6 +195,8 @@ var vueapp = new Vue({
         regButton: function () {
             regState = true;
         },
+
+
 
         register: async function (regEmail, regPassword, regType) {
             const data = {
@@ -415,21 +431,3 @@ var vueapp = new Vue({
 if('serviceWorker' in navigator) {
     navigator.serviceWorker.register('scripts/sw.js');
 };
-
-var button = document.getElementById("testButton");
-button.addEventListener('click', function(e) {
-    Notification.requestPermission().then(function(result) {
-        if(result === 'granted') {
-            randomNotification();
-        }
-    });
-});
-function randomNotification() {
-    var notifTitle = 'test'
-    var notifBody = 'nice';
-    var options = {
-        body: notifBody,
-    }
-    var notif = new Notification(notifTitle, options);
-    setTimeout(randomNotification, 30000);
-}
