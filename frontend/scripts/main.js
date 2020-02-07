@@ -127,8 +127,6 @@ var vueapp = new Vue({
         console.log(dataRes);
         classes.menu = dataRes;
         newAry = classes;
-
-
     },
     methods: {
         saveClickedClass: async function () {
