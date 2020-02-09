@@ -1,5 +1,9 @@
 # app-dev-cw2
 
+School class system 
+
+### Sofware used
+
 Frontend:
 - Vue.js        https://vuejs.org/
 - Bootstrap     https://getbootstrap.com
@@ -12,3 +16,11 @@ Backend:
 - MongoDB       https://www.npmjs.com/package/mongodb
 - Body-parser   https://www.npmjs.com/package/body-parser
 - CORS          https://www.npmjs.com/package/cors
+
+
+### Build/Start instructions
+```
+cd backend
+npm install
+nodemon server.js
+```
